@@ -19,19 +19,12 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Profile from './components/Profile/Profile';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
-// import SignUp from './components/SignUp/SignUp';
+import HomePage from './components/HomePage/HamePage';
 
 const Stack = createStackNavigator();
 
@@ -45,7 +38,14 @@ function HomeScreen() {
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="signin">
+      <Stack.Navigator initialRouteName="homepage">
+      <Stack.Screen
+          name="homepage"
+          component={HomePage}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="signin"
           component={SignIn}
@@ -53,13 +53,7 @@ function App(): React.JSX.Element {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="profile"
-          component={Profile}
-          options={{
-            headerShown: false,
-          }}
-        />
+       
         <Stack.Screen
           name="signup"
           component={SignUp}
@@ -67,6 +61,7 @@ function App(): React.JSX.Element {
             headerShown: false,
           }}
         />
+        
 
       </Stack.Navigator>
     </NavigationContainer>
