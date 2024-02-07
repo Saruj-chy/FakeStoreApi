@@ -11,7 +11,7 @@ const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    
+
     loadFavorites();
     const backAction = () => {
       navigation.goBack();
@@ -20,7 +20,7 @@ const FavoritesScreen = ({ navigation }) => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
   }, []);
-  
+
 
 
   const loadFavorites = async () => {
@@ -47,7 +47,7 @@ const FavoritesScreen = ({ navigation }) => {
 
 
   };
-  
+
 
 
   const renderItem = ({ item }) => (
@@ -68,8 +68,8 @@ const FavoritesScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eaf8f8' }}>
-      <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', paddingHorizontal: 20 }}>
-      <TouchableOpacity onPress={() => {
+      <View style={styles.viewStyle}>
+        <TouchableOpacity onPress={() => {
           navigation.goBack();
         }}>
           <FontAwesome
@@ -77,7 +77,7 @@ const FavoritesScreen = ({ navigation }) => {
             icon={SolidIcons.arrowLeft}
           />
         </TouchableOpacity>
-        <Text style={{ flex:1, color: 'white', textAlign: 'center', fontSize: 22, }}>Favourites List</Text>
+        <Text style={styles.titleText}>Favourites List</Text>
 
 
       </View>
@@ -91,8 +91,8 @@ const FavoritesScreen = ({ navigation }) => {
             numColumns={1} // For grid view
             contentContainerStyle={styles.container}
           /> :
-            (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
-              <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+            (<View style={styles.loadView}>
+              <Text style={styles.loadText}>Loading...</Text>
             </View>)
         }
       </View>
@@ -110,6 +110,21 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
     paddingTop: 10,
+  },
+  viewStyle:
+  {
+    backgroundColor: '#20bead',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20
+  },
+  titleText:
+  {
+    flex: 1,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 22,
   },
   item: {
     flex: 1,
@@ -152,6 +167,19 @@ const styles = StyleSheet.create({
   arrowLeft: {
     fontSize: 30,
     color: 'white',
+  },
+  loadView:
+  {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadText:
+  {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: 'black'
   },
 });
 

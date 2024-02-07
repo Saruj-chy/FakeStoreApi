@@ -31,7 +31,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
     };
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
-    
+
   }, [productId]);
 
   const fetchProductDetails = async () => {
@@ -54,8 +54,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
   };
 
   const toggleFavorite = async () => {
-    // setIsFavorite(!isFavorite);
-
     const favorites = JSON.parse(await AsyncStorage.getItem('favorites')) || [];
     if (isFavorite) {
       const newFavorites = favorites.filter(fav => fav.id !== product.id);
@@ -68,8 +66,8 @@ const ProductDetailScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#eaf8f8' }}>
-      <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+    <SafeAreaView style={styles.safeAreaStyle}>
+      <View style={styles.viewStyle}>
         <TouchableOpacity onPress={() => {
           navigation.goBack();
         }}>
@@ -78,7 +76,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
             icon={SolidIcons.arrowLeft}
           />
         </TouchableOpacity>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Product Details</Text>
+        <Text style={styles.titleText}>Product Details</Text>
         <TouchableOpacity onPress={() => {
           navigation.navigate('favourite_screen');
         }}>
@@ -104,8 +102,8 @@ const ProductDetailScreen = ({ route, navigation }) => {
                 icon={isFavorite ? SolidIcons.heart : RegularIcons.heart}
               />
             </TouchableOpacity>
-          </View>) : (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
-            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+          </View>) : (<View style={styles.loadView}>
+            <Text style={styles.loadText}>Loading...</Text>
           </View>)
         }
       </View>
@@ -115,6 +113,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+
   container: {
     // alignItems: 'center',
     padding: 20,
@@ -129,6 +128,26 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 7,
     margin: 20
+  },
+  viewStyle:
+  {
+    backgroundColor: '#20bead',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20
+  },
+  safeAreaStyle:
+  {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#eaf8f8'
+  },
+  titleText:
+  {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 22
   },
   productContainer: {
     flex: 1,
@@ -173,6 +192,19 @@ const styles = StyleSheet.create({
   arrowLeft: {
     fontSize: 30,
     color: 'white',
+  },
+  loadView:
+  {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadText:
+  {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: 'black'
   },
 });
 

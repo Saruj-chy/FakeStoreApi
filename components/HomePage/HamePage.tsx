@@ -15,45 +15,43 @@ import { firebase } from '../../FirebaseConfig';
 const HomePage = ({ navigation }) => {
     const [data, setData] = useState([]);
 
-    useEffect(() => {     
-        fetchData(); 
+    useEffect(() => {
+        fetchData();
 
         const backAction = () => {
             Alert.alert("Exit App", "Do you want to exit the app?", [
                 { text: "SignOut", onPress: () => signOutUser() },
-              {
-                text: "Cancel",
-                onPress: () => null,
-                style: "cancel"
-              },
-              { text: "YES", onPress: () => BackHandler.exitApp() }
+                {
+                    text: "Cancel",
+                    onPress: () => null,
+                    style: "cancel"
+                },
+                { text: "YES", onPress: () => BackHandler.exitApp() }
             ]);
             return true;
-          };
-      
-          const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-      
-          return () => backHandler.remove();
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => backHandler.remove();
     }, []);
-    
+
     const signOutUser = async () => {
         try {
-          await firebase.auth().signOut();
-          await AsyncStorage.setItem('user_uid', "")
-          navigation.navigate("signin");
+            await firebase.auth().signOut();
+            await AsyncStorage.setItem('user_uid', "")
+            navigation.navigate("signin");
         } catch (error) {
         }
-      };
-    
+    };
+
 
     const fetchData = async () => {
         try {
             const response = await fetch('https://fakestoreapi.com/products');
             const json = await response.json();
             setData(json);
-            // console.log(json);
         } catch (error) {
-            console.error(error);
         }
     };
 
@@ -67,9 +65,9 @@ const HomePage = ({ navigation }) => {
         </TouchableOpacity>
     );
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#eaf8f8' }}>
-            <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-                <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Home Page</Text>
+        <SafeAreaView style={styles.safeareaStyle}>
+            <View style={styles.appbarView}>
+                <Text style={styles.appbarText}>Home Page</Text>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('favourite_screen');
                 }}>
@@ -85,12 +83,12 @@ const HomePage = ({ navigation }) => {
                     data.length > 0 ? <FlatList
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={item => item.id} // Assumption: your objects have an 'id' key
-                        numColumns={2} // For grid view
+                        keyExtractor={item => item.id}
+                        numColumns={2}
                         contentContainerStyle={styles.container}
                     /> :
-                        (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+                        (<View style={styles.loadView}>
+                            <Text style={styles.loadStyle}>Loading...</Text>
                         </View>)
                 }
             </View>
@@ -117,6 +115,33 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         paddingVertical: 30,
         paddingHorizontal: 7
+    },
+    appbarView: { 
+        backgroundColor: '#20bead', 
+        padding: 10, 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        paddingHorizontal: 20 
+    },
+    appbarText: { 
+        color: 'white', 
+        textAlign: 'center', 
+        fontSize: 22
+     },
+    safeareaStyle: { 
+        flex: 1, 
+        backgroundColor: '#eaf8f8' 
+    },
+    loadView:{ 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+    },
+    loadStyle: { 
+        textAlign: 'center', 
+        fontWeight: 'bold', 
+        fontSize: 18, 
+        color: 'black' 
     },
     text: {
         fontSize: 16,

@@ -9,14 +9,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { GoogleSignin, statusCodes  } from '@react-native-google-signin/google-signin';
 
 
-const SignUp = ({navigation}) => {
+const SignUp = ({ navigation }) => {
   const [textInputEmail, setTextInputEmail] = useState('');
   const [textInputPassword, setTextInputPassword] = useState('');
   const [textInputConfirmPassword, setTextInputConfirmPassword] = useState('');
   const [userInfo, setUserInfo] = useState('');
   const [isLoad, setIsLoad] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     const backAction = () => {
       navigation.goBack();
       return true;
@@ -25,41 +25,41 @@ const SignUp = ({navigation}) => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
     return () => backHandler.remove();
-  },[])
+  }, [])
 
-  const onSignUpClick = async() => {
+  const onSignUpClick = async () => {
     setIsLoad(true);
     if (
       textInputEmail.length <= 0 ||
-      textInputPassword.length <= 0 || 
+      textInputPassword.length <= 0 ||
       textInputConfirmPassword <= 0
     ) {
       console.log('please proveide actual value');
       notifyMessage('please proveide actual value');
       setIsLoad(false);
-    }else if(textInputPassword != textInputConfirmPassword){
+    } else if (textInputPassword != textInputConfirmPassword) {
       console.log('Password and ConfirmPassword are not match.');
       notifyMessage('Password and ConfirmPassword are not match.');
-    } else{
-     
+    } else {
+
       await firebase.auth()
-      .createUserWithEmailAndPassword(textInputEmail, textInputPassword)
-      .then(user => {
-        if (user) {
+        .createUserWithEmailAndPassword(textInputEmail, textInputPassword)
+        .then(user => {
+          if (user) {
 
-        const user_uid = user.user.uid;
-        console.log(user_uid);
-        notifyMessage("Sign-up Successfully");
+            const user_uid = user.user.uid;
+            console.log(user_uid);
+            notifyMessage("Sign-up Successfully");
 
-        storeData(user_uid);
-        setIsLoad(false);
-        navigation.navigate("homepage");
-          
-        }
-      })
-      .catch(error => {
-        notifyMessage('Auth failed');
-      });
+            storeData(user_uid);
+            setIsLoad(false);
+            navigation.navigate("homepage");
+
+          }
+        })
+        .catch(error => {
+          notifyMessage('Auth failed');
+        });
     }
   }
   const storeData = async (value) => {
@@ -70,8 +70,7 @@ const SignUp = ({navigation}) => {
     }
   }
 
-  const onGoogleButtonPress = async() => {
-    console.log("google sign in");
+  const onGoogleButtonPress = async () => {
     // try {
     //     await GoogleSignin.hasPlayServices();
     //     // const userInfo = await GoogleSignin.signIn();
@@ -84,7 +83,7 @@ const SignUp = ({navigation}) => {
 
     //     // Create a Google credential with the token
     //     const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
-      
+
     //     // Sign-in the user with the credential
     //     const value = firebase.auth().signInWithCredential(googleCredential);
     //     console.log("Value", value);
@@ -106,7 +105,7 @@ const SignUp = ({navigation}) => {
     //     }
     //   }
 
-    
+
 
 
 
@@ -146,7 +145,7 @@ const SignUp = ({navigation}) => {
     //   try {
     //     await GoogleSignin.hasPlayServices();
     //     const userInfo = await GoogleSignin.signIn();
-       
+
     //   } catch (error) {
     //     console.log(error);
     //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -195,18 +194,13 @@ const SignUp = ({navigation}) => {
     }
   };
 
-  return <SafeAreaView style={{ flex: 1 }}>
+  return <SafeAreaView style={styles.safeAreaStyle}>
     <ScrollView >
       <View >
         <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignContent: 'center',
-            marginTop: 150
-          }}>
+          style={styles.titleView}>
 
-          <Text style={{ marginTop: 50, fontSize: 30, color: "#598d28", fontWeight: 'bold' }}>Sign Up</Text>
+          <Text style={styles.titleText}>Sign Up</Text>
         </View>
         <View>
           <TextInput
@@ -222,7 +216,7 @@ const SignUp = ({navigation}) => {
             value={textInputPassword}
             placeholder="Enter your Password"
             secureTextEntry={true}
-           
+
           />
           <TextInput
             style={styles.inputs}
@@ -233,40 +227,40 @@ const SignUp = ({navigation}) => {
           />
         </View>
         <View>
-        <Text
-          onPress={
-           () => navigation.navigate("signin")
-          }
+          <Text
+            onPress={
+              () => navigation.navigate("signin")
+            }
             style={styles.accStyle}
           >
             Already have a account?
           </Text>
           <Text
-          onPress={onSignUpClick}
+            onPress={onSignUpClick}
             style={styles.signBtn}
           >
             Sign Up
           </Text>
         </View>
         <View>
-          <View style={{justifyContent:'center',  }}>
-            <Text style={{textAlign:'center'}}>---------------------------------------------   OR  -----------------------------------------------</Text>
+          <View style={{ justifyContent: 'center', }}>
+            <Text style={{ textAlign: 'center' }}>---------------------------------------------   OR  -----------------------------------------------</Text>
           </View>
           <View>
-          
-          <TouchableOpacity style={styles.button} onPress={onGoogleButtonPress}>
+
+            <TouchableOpacity style={styles.button} onPress={onGoogleButtonPress}>
               <View style={styles.buttonContent}>
                 <Image
-                  source={{uri:"https://cdn2.hubspot.net/hubfs/53/image8-2.jpg"}} // Update path accordingly
+                  source={{ uri: "https://cdn2.hubspot.net/hubfs/53/image8-2.jpg" }} // Update path accordingly
                   style={styles.logo}
                 />
                 <Text style={styles.text}>Sign in with Google</Text>
               </View>
             </TouchableOpacity>
 
-          
+
           </View>
-          {userInfo!=null && <Text>{userInfo}</Text>}
+          {userInfo != null && <Text>{userInfo}</Text>}
 
         </View>
       </View>
@@ -281,11 +275,45 @@ const SignUp = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-  inputs:{
-    height: 40,
-    borderColor: 'gray',
+  safeAreaStyle:
+  {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  titleView:
+  {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    marginTop: 150
+  },
+  titleText:
+  {
+    fontSize: 30,
+    color: "#598d28",
+    fontWeight: 'bold'
+  },
+  inputs: {
+    height: 60,
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
     borderWidth: 1,
-    margin:20
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#333',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject, // This will cover the entire screen
@@ -327,7 +355,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 4,
     shadowColor: '#000',
-    marginTop:20,
+    marginTop: 20,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -349,12 +377,13 @@ const styles = StyleSheet.create({
     color: '#757575', // Google button text color
     fontWeight: 'bold',
   },
-  accStyle:{ 
-    paddingHorizontal: 10, 
-    justifyContent: 'center', 
-    textAlign: 'right', 
-    color:'black',
-    fontSize:18
+  accStyle: {
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    textAlign: 'right',
+    color: 'black',
+    fontSize: 18,
+    marginTop:50
   },
 });
 
