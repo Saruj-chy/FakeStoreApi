@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, Alert, BackHandler, } from 'react-native';
+import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, Alert, BackHandler, TouchableOpacity, Image, } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { firebase } from '../../FirebaseConfig';
@@ -26,13 +26,7 @@ const SignIn = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('user_uid', value)
-    } catch (e) {
-      // saving error
-    }
-  }
+ 
 
   const onSignInClick = async () => {
     setIsLoad(true);
@@ -52,13 +46,20 @@ const SignIn = ({ navigation }) => {
         navigation.navigate("homepage");
         console.log('User authenticated:' + user.email);
         console.log('User uid:' + user.uid);
-        // notifyMessage(user);
+        notifyMessage("Sign-in Successful");
 
       } catch (error) {
         console.error('Authentication failed:' + error.message);
-        notifyMessage("Auth Failed" + error.message);
+        notifyMessage("Sign-in Failed" + error.message);
       }
 
+    }
+  }
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('user_uid', value)
+    } catch (e) {
+      // saving error
     }
   }
   const notifyMessage = msg => {
@@ -95,10 +96,20 @@ const SignIn = ({ navigation }) => {
             onChangeText={text => setTextInputPassword(text)}
             value={textInputPassword}
             placeholder="Enter your Password"
+            secureTextEntry={true}
           />
 
         </View>
         <View>
+        <Text
+              onPress={
+                () => navigation.navigate("signup")
+              }
+
+              style={styles.accStyle}
+            >
+              Create a new account?
+            </Text>
           <Text
             onPress={onSignInClick}
             style={styles.signBtn}
@@ -111,21 +122,18 @@ const SignIn = ({ navigation }) => {
             <Text style={{ textAlign: 'center' }}>---------------------------------------------   OR  -----------------------------------------------</Text>
           </View>
           <View>
-            <Text
-              style={{ backgroundColor: "#598d28", color: 'white', padding: 10, justifyContent: 'center', textAlign: 'center', margin: 10 }}
-            >
-              Google
-            </Text>
+          
+            <TouchableOpacity style={styles.button}>
+              <View style={styles.buttonContent}>
+                <Image
+                  source={{uri:"https://cdn2.hubspot.net/hubfs/53/image8-2.jpg"}} // Update path accordingly
+                  style={styles.logo}
+                />
+                <Text style={styles.text}>Sign in with Google</Text>
+              </View>
+            </TouchableOpacity>
 
-            <Text
-              onPress={
-                () => navigation.navigate("signup")
-              }
-
-              style={{ padding: 10, justifyContent: 'center', textAlign: 'center', margin: 10 }}
-            >
-              Create a new account?
-            </Text>
+            
           </View>
 
 
@@ -181,7 +189,44 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 10
-  }
+  },
+  button: {
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 4,
+    shadowColor: '#000',
+    marginTop:20,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow effect
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  text: {
+    color: '#757575', // Google button text color
+    fontWeight: 'bold',
+  },
+  accStyle:{ 
+    paddingHorizontal: 10, 
+    justifyContent: 'center', 
+    textAlign: 'right', 
+    color:'black',
+    fontSize:18
+  },
 });
 
 

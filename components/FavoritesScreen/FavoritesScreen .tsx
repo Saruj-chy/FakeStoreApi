@@ -13,6 +13,12 @@ const FavoritesScreen = ({ navigation }) => {
   useEffect(() => {
     
     loadFavorites();
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
   }, []);
   
 

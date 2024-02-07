@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, BackHandler, } from 'react-native';
+import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, BackHandler, TouchableOpacity, Image, } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { firebase } from '../../FirebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { GoogleSignin, statusCodes  } from '@react-native-google-signin/google-signin';
 
 
@@ -13,7 +14,7 @@ const SignUp = ({navigation}) => {
   const [textInputPassword, setTextInputPassword] = useState('');
   const [textInputConfirmPassword, setTextInputConfirmPassword] = useState('');
   const [userInfo, setUserInfo] = useState('');
-
+  const [isLoad, setIsLoad] = useState(false);
 
   useEffect(()=>{
     const backAction = () => {
@@ -26,8 +27,8 @@ const SignUp = ({navigation}) => {
     return () => backHandler.remove();
   },[])
 
-  const onSignInClick = async() => {
-    console.log("email: "+textInputEmail+"  Password: "+ textInputPassword+"  Confirm Password:"+ textInputConfirmPassword);
+  const onSignUpClick = async() => {
+    setIsLoad(true);
     if (
       textInputEmail.length <= 0 ||
       textInputPassword.length <= 0 || 
@@ -35,6 +36,7 @@ const SignUp = ({navigation}) => {
     ) {
       console.log('please proveide actual value');
       notifyMessage('please proveide actual value');
+      setIsLoad(false);
     }else if(textInputPassword != textInputConfirmPassword){
       console.log('Password and ConfirmPassword are not match.');
       notifyMessage('Password and ConfirmPassword are not match.');
@@ -44,13 +46,27 @@ const SignUp = ({navigation}) => {
       .createUserWithEmailAndPassword(textInputEmail, textInputPassword)
       .then(user => {
         if (user) {
-          console.log(user);
-          notifyMessage(user);
+
+        const user_uid = user.user.uid;
+        console.log(user_uid);
+        notifyMessage("Sign-up Successfully");
+
+        storeData(user_uid);
+        setIsLoad(false);
+        navigation.navigate("homepage");
+          
         }
       })
       .catch(error => {
         notifyMessage('Auth failed');
       });
+    }
+  }
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('user_uid', value)
+    } catch (e) {
+      // saving error
     }
   }
 
@@ -198,26 +214,38 @@ const SignUp = ({navigation}) => {
             onChangeText={text => setTextInputEmail(text)}
             value={textInputEmail}
             placeholder="Enter your Email"
+            keyboardType="email-address"
           />
           <TextInput
             style={styles.inputs}
             onChangeText={text => setTextInputPassword(text)}
             value={textInputPassword}
             placeholder="Enter your Password"
+            secureTextEntry={true}
+           
           />
           <TextInput
             style={styles.inputs}
             onChangeText={text => setTextInputConfirmPassword(text)}
             value={textInputConfirmPassword}
             placeholder="Enter your Confirm Password"
+            secureTextEntry={true}
           />
         </View>
         <View>
-          <Text
-          onPress={onSignInClick}
-            style={{ backgroundColor: "#598d28", color: 'white', padding: 10, justifyContent:'center', textAlign:'center', margin:10 }}
+        <Text
+          onPress={
+           () => navigation.navigate("signin")
+          }
+            style={styles.accStyle}
           >
-            Sign In
+            Already have a account?
+          </Text>
+          <Text
+          onPress={onSignUpClick}
+            style={styles.signBtn}
+          >
+            Sign Up
           </Text>
         </View>
         <View>
@@ -225,27 +253,29 @@ const SignUp = ({navigation}) => {
             <Text style={{textAlign:'center'}}>---------------------------------------------   OR  -----------------------------------------------</Text>
           </View>
           <View>
-          <Text
-          onPress={onGoogleButtonPress}
-            style={{ backgroundColor: "#598d28", color: 'white', padding: 10, justifyContent:'center', textAlign:'center', margin:10 }}
-          >
-            Google
-          </Text>
+          
+          <TouchableOpacity style={styles.button} onPress={onGoogleButtonPress}>
+              <View style={styles.buttonContent}>
+                <Image
+                  source={{uri:"https://cdn2.hubspot.net/hubfs/53/image8-2.jpg"}} // Update path accordingly
+                  style={styles.logo}
+                />
+                <Text style={styles.text}>Sign in with Google</Text>
+              </View>
+            </TouchableOpacity>
 
-          <Text
-          onPress={
-           () => navigation.navigate("signin")
-          }
-            style={{ padding: 10, justifyContent:'center', textAlign:'center', margin:10 }}
-          >
-            Already have a account?
-          </Text>
+          
           </View>
           {userInfo!=null && <Text>{userInfo}</Text>}
 
         </View>
       </View>
     </ScrollView>
+    {
+      isLoad && <View style={styles.overlay}>
+        <Text style={styles.overlayText}>Loading...</Text>
+      </View>
+    }
   </SafeAreaView>;
 };
 
@@ -256,7 +286,76 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     margin:20
-  }
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // This will cover the entire screen
+    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent black
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+
+  overlayText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '900',
+  },
+  signBtn: {
+    backgroundColor: "#598d28",
+    color: 'white',
+    padding: 10,
+    justifyContent: 'center',
+    textAlign: 'center',
+    margin: 10,
+    fontSize: 22,
+    fontWeight: '900',
+    borderRadius: 8,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 10
+  },
+  button: {
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 4,
+    shadowColor: '#000',
+    marginTop:20,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow effect
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  text: {
+    color: '#757575', // Google button text color
+    fontWeight: 'bold',
+  },
+  accStyle:{ 
+    paddingHorizontal: 10, 
+    justifyContent: 'center', 
+    textAlign: 'right', 
+    color:'black',
+    fontSize:18
+  },
 });
 
 

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  BackHandler,
 } from 'react-native';
 import FontAwesome, {
   SolidIcons,
@@ -22,28 +23,35 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    const fetchProductDetails = async () => {
-      try {
-        const response = await fetch(
-          `https://fakestoreapi.com/products/${productId}`,
-        );
-        const data = await response.json();
-        setProduct(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    const checkFavoriteStatus = async () => {
-      const favorites =
-        JSON.parse(await AsyncStorage.getItem('favorites')) || [];
-      console.log(favorites);
-      const isFav = favorites.some(fav => fav.id === productId);
-      setIsFavorite(isFav);
-    };
-
     fetchProductDetails();
     checkFavoriteStatus();
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+    
   }, [productId]);
+
+  const fetchProductDetails = async () => {
+    try {
+      const response = await fetch(
+        `https://fakestoreapi.com/products/${productId}`,
+      );
+      const data = await response.json();
+      setProduct(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const checkFavoriteStatus = async () => {
+    const favorites =
+      JSON.parse(await AsyncStorage.getItem('favorites')) || [];
+    console.log(favorites);
+    const isFav = favorites.some(fav => fav.id === productId);
+    setIsFavorite(isFav);
+  };
 
   const toggleFavorite = async () => {
     // setIsFavorite(!isFavorite);
