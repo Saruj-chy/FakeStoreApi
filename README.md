@@ -53,6 +53,6 @@ Showing dialog to exit from the app using back button of any device in HomePage.
 
 # Apk
 
-Ready to experience our app firsthand? We've made it easy for you to get started! Simply click on the link below to download the APK file for our React Native application. This link will take you to a secure download page where you can directly download the latest version of our app.
+Ready to experience my app firsthand? I've made it easy for you to get started! Simply click on the link below to download the APK file for my React Native application. This link will take you to a secure download page where you can directly download the latest version of our app.
 
 <p><a href="https://github.com/Saruj-chy/FakeStoreApi/blob/main/apk/release/app-release.apk">Download the APK here</a></p>
