@@ -73,6 +73,7 @@ const SignUp = ({ navigation }) => {
   const onGoogleButtonPress = async () => {
   
   }
+  
 
 
   const notifyMessage = msg => {
