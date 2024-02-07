@@ -28,7 +28,7 @@ const HomePage = ({ navigation }) => {
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.item}
-            >
+            onPress={() => navigation.navigate('product_detail', { productId: item.id })}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.price}>${item.price}</Text>
@@ -38,23 +38,26 @@ const HomePage = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor:'#eaf8f8' }}>
             <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
                 <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Home Page</Text>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('favourite_screen');
-                }}>
-                    <FontAwesome
+                <FontAwesome
                         style={styles.iconStyle}
                         icon={SolidIcons.heart}
                     />
-                </TouchableOpacity>
 
             </View>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id} // Assumption: your objects have an 'id' key
-                numColumns={2} // For grid view
-                contentContainerStyle={styles.container}
-            />
+            <View style={{flex:1, justifyContent:'center'}}>
+                {
+                    data.length>0? <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id} // Assumption: your objects have an 'id' key
+                    numColumns={2} // For grid view
+                    contentContainerStyle={styles.container}
+                /> :
+                (<View style={{ flexDirection:'column', justifyContent: 'center', alignItems: 'center',  }}>
+                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color:'black' }}>Loading...</Text>
+              </View>)
+                }
+            </View>
         </SafeAreaView>
 
     );
