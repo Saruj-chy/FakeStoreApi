@@ -1,18 +1,50 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, BackHandler, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome, {
     SolidIcons,
     RegularIcons,
     BrandIcons,
     parseIconFromClassName,
 } from 'react-native-fontawesome';
+import { firebase } from '../../FirebaseConfig';
+
+
 const HomePage = ({ navigation }) => {
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        fetchData();
+    useEffect(() => {     
+        fetchData(); 
+
+        const backAction = () => {
+            Alert.alert("Exit App", "Do you want to exit the app?", [
+                { text: "SignOut", onPress: () => signOutUser() },
+              {
+                text: "Cancel",
+                onPress: () => null,
+                style: "cancel"
+              },
+              { text: "YES", onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+          };
+      
+          const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      
+          return () => backHandler.remove();
     }, []);
+    
+    const signOutUser = async () => {
+        try {
+          await firebase.auth().signOut();
+          await AsyncStorage.setItem('user_uid', "")
+          navigation.navigate("signin");
+        } catch (error) {
+        }
+      };
+    
 
     const fetchData = async () => {
         try {

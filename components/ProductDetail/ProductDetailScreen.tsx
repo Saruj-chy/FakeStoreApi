@@ -63,7 +63,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#eaf8f8' }}>
       <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('homepage');
+          navigation.goBack();
         }}>
           <FontAwesome
             style={styles.arrowLeft}

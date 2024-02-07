@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, } from 'react-native';
+import { ImageBackground, Platform, StyleSheet, Text, ToastAndroid, View, AlertIOS, BackHandler, } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { firebase } from '../../FirebaseConfig';
@@ -15,13 +15,16 @@ const SignUp = ({navigation}) => {
   const [userInfo, setUserInfo] = useState('');
 
 
-  // useEffect(()=>{
-  //   GoogleSignin.configure({
-  //       webClientId: '585979483769-1r8uifp4shg463amvgitmu8jvfedndmm.apps.googleusercontent.com',
-  //       forceConsentPrompt: true,
-  //       offlineAccess: false,
-  //     });
-  // },[])
+  useEffect(()=>{
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  },[])
 
   const onSignInClick = async() => {
     console.log("email: "+textInputEmail+"  Password: "+ textInputPassword+"  Confirm Password:"+ textInputConfirmPassword);

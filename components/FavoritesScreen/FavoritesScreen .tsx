@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, Alert, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome, {
   SolidIcons,
@@ -11,8 +11,11 @@ const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
+    
     loadFavorites();
   }, []);
+  
+
 
   const loadFavorites = async () => {
     const favs = JSON.parse(await AsyncStorage.getItem('favorites')) || [];
@@ -20,10 +23,26 @@ const FavoritesScreen = ({ navigation }) => {
   };
 
   const removeFromFavorites = async (id) => {
-    const newFavorites = favorites.filter(fav => fav.id !== id);
-    await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
-    setFavorites(newFavorites);
+    Alert.alert("Hold on!", "Are you sure you want to remove the item?", [
+      {
+        text: "No",
+        onPress: () => null,
+        style: "cancel"
+      },
+      {
+        text: "YES", onPress: async () => {
+          const newFavorites = favorites.filter(fav => fav.id !== id);
+          await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+          setFavorites(newFavorites);
+        }
+      }
+    ]);
+    return true;
+
+
   };
+  
+
 
   const renderItem = ({ item }) => (
     <View
@@ -43,19 +62,36 @@ const FavoritesScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eaf8f8' }}>
-      <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'center', paddingHorizontal: 20 }}>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Favourites List</Text>
+      <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', paddingHorizontal: 20 }}>
+      <TouchableOpacity onPress={() => {
+          navigation.goBack();
+        }}>
+          <FontAwesome
+            style={styles.arrowLeft}
+            icon={SolidIcons.arrowLeft}
+          />
+        </TouchableOpacity>
+        <Text style={{ flex:1, color: 'white', textAlign: 'center', fontSize: 22, }}>Favourites List</Text>
 
 
       </View>
 
-      <FlatList
-        data={favorites}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        numColumns={1} // For grid view
-        contentContainerStyle={styles.container}
-      />
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        {
+          favorites.length > 0 ? <FlatList
+            data={favorites}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            numColumns={1} // For grid view
+            contentContainerStyle={styles.container}
+          /> :
+            (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
+              <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+            </View>)
+        }
+      </View>
+
+
 
 
     </SafeAreaView>
@@ -106,6 +142,10 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: 30,
     color: '#f25570',
+  },
+  arrowLeft: {
+    fontSize: 30,
+    color: 'white',
   },
 });
 

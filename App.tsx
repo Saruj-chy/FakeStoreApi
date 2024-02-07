@@ -1,22 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+
 } from 'react-native';
 
 
@@ -27,20 +15,25 @@ import SignUp from './components/SignUp/SignUp';
 import HomePage from './components/HomePage/HamePage';
 import ProductDetailScreen from './components/ProductDetail/ProductDetailScreen';
 import FavoritesScreen from './components/FavoritesScreen/FavoritesScreen ';
+import SplashPage from './components/SplashPage/SplashPage';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createStackNavigator();
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
 function App(): React.JSX.Element {
+  useEffect(() => {
+    SplashScreen.hide();
+}, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="homepage">
+      <Stack.Navigator initialRouteName="splashpage">
+      <Stack.Screen
+          name="splashpage"
+          component={SplashPage}
+          options={{
+            headerShown: false,
+          }}
+        />
       <Stack.Screen
           name="homepage"
           component={HomePage}
