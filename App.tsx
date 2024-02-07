@@ -26,6 +26,7 @@ import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import HomePage from './components/HomePage/HamePage';
 import ProductDetailScreen from './components/ProductDetail/ProductDetailScreen';
+import FavoritesScreen from './components/FavoritesScreen/FavoritesScreen ';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,13 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="product_detail"
           component={ProductDetailScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="favourite_screen"
+          component={FavoritesScreen}
           options={{
             headerShown: false,
           }}

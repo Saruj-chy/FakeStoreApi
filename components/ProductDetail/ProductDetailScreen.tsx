@@ -60,9 +60,9 @@ const ProductDetailScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{flex:1, flexDirection:'column', backgroundColor:'#eaf8f8'}}>
-      <View style={{  backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-      <TouchableOpacity onPress={() => {
+    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#eaf8f8' }}>
+      <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+        <TouchableOpacity onPress={() => {
           navigation.navigate('homepage');
         }}>
           <FontAwesome
@@ -71,31 +71,35 @@ const ProductDetailScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Product Details</Text>
-        <FontAwesome
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('favourite_screen');
+        }}>
+          <FontAwesome
             style={styles.favouriteStyle}
             icon={SolidIcons.heart}
           />
+        </TouchableOpacity>
 
       </View>
       <View style={styles.productContainer}>
-      {
-        product ? (<View style={styles.container}>
-          <View style={{alignItems: 'center',}}>
-          <Image source={{ uri: product.image }} style={styles.image} />
-          </View>
-          <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.price}>${product.price}</Text>
-          <Text style={styles.description}>{product.description}</Text>
-          <TouchableOpacity style={{alignItems: 'center',}} onPress={toggleFavorite}>
-            <FontAwesome
-              style={styles.iconStyle}
-              icon={isFavorite ? SolidIcons.heart : RegularIcons.heart}
-            />
-          </TouchableOpacity>
-        </View>) : (<View style={{ flexDirection:'column', justifyContent: 'center', alignItems: 'center',  }}>
-          <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color:'black' }}>Loading...</Text>
-        </View>)
-      }
+        {
+          product ? (<View style={styles.container}>
+            <View style={{ alignItems: 'center', }}>
+              <Image source={{ uri: product.image }} style={styles.image} />
+            </View>
+            <Text style={styles.title}>{product.title}</Text>
+            <Text style={styles.price}>${product.price}</Text>
+            <Text style={styles.description}>{product.description}</Text>
+            <TouchableOpacity style={{ alignItems: 'center', }} onPress={toggleFavorite}>
+              <FontAwesome
+                style={styles.iconStyle}
+                icon={isFavorite ? SolidIcons.heart : RegularIcons.heart}
+              />
+            </TouchableOpacity>
+          </View>) : (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
+            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+          </View>)
+        }
       </View>
 
     </SafeAreaView>
@@ -107,47 +111,47 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     padding: 20,
     borderRadius: 8,
-        backgroundColor: 'white',
-        overflow: 'hidden',
-        elevation: 3, 
-        shadowColor: '#000', 
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        paddingVertical: 30,
-        paddingHorizontal:7,
-        margin:20
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    paddingVertical: 30,
+    paddingHorizontal: 7,
+    margin: 20
   },
-  productContainer:{
-    flex:1, 
-    justifyContent:'center',
-    
+  productContainer: {
+    flex: 1,
+    justifyContent: 'center',
+
   },
   image: {
     width: 300,
     height: 300,
     resizeMode: 'contain',
-    
+
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center',
-    color:'black'
+    color: 'black'
   },
   price: {
     fontSize: 20,
     color: '#20bead',
     marginVertical: 10,
-    marginStart:20,
-    fontWeight:'900'
+    marginStart: 20,
+    fontWeight: '900'
   },
   description: {
     textAlign: 'justify',
     marginBottom: 20,
-    marginHorizontal:10
-    
+    marginHorizontal: 10
+
   },
   iconStyle: {
     fontSize: 40,

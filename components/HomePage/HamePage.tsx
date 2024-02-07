@@ -35,27 +35,31 @@ const HomePage = ({ navigation }) => {
         </TouchableOpacity>
     );
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor:'#eaf8f8' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#eaf8f8' }}>
             <View style={{ backgroundColor: '#20bead', padding: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
                 <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Home Page</Text>
-                <FontAwesome
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('favourite_screen');
+                }}>
+                    <FontAwesome
                         style={styles.iconStyle}
                         icon={SolidIcons.heart}
                     />
+                </TouchableOpacity>
 
             </View>
-            <View style={{flex:1, justifyContent:'center'}}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
                 {
-                    data.length>0? <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id} // Assumption: your objects have an 'id' key
-                    numColumns={2} // For grid view
-                    contentContainerStyle={styles.container}
-                /> :
-                (<View style={{ flexDirection:'column', justifyContent: 'center', alignItems: 'center',  }}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color:'black' }}>Loading...</Text>
-              </View>)
+                    data.length > 0 ? <FlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id} // Assumption: your objects have an 'id' key
+                        numColumns={2} // For grid view
+                        contentContainerStyle={styles.container}
+                    /> :
+                        (<View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 18, color: 'black' }}>Loading...</Text>
+                        </View>)
                 }
             </View>
         </SafeAreaView>
@@ -74,13 +78,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: 'white',
         overflow: 'hidden',
-        elevation: 3, 
-        shadowColor: '#000', 
+        elevation: 3,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         paddingVertical: 30,
-        paddingHorizontal:7
+        paddingHorizontal: 7
     },
     text: {
         fontSize: 16,
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
     image: {
         width: 150,
         height: 150,
+        resizeMode: 'contain',
     },
     title: {
         fontSize: 14,
@@ -98,10 +103,10 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: '#f25570',
     },
-    price:{
+    price: {
         fontWeight: '900',
-        color:'#20bead',
-        fontSize:16
+        color: '#20bead',
+        fontSize: 16
     }
 });
 
